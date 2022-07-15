@@ -6,12 +6,12 @@ import Loading from './Loading'
 import Search from './Search'
 
 const Result = () => {
-  const {results,getResults,searchTerm,loading}=useResultContext();
+  const {results,getResults,searchTerm,Loadingg}=useResultContext();
   const location =useLocation();
 
   useEffect(() => {
     if(location.pathname==='/videos'){
-      getResults(`/video/q=${searchTerm} videos`)
+      getResults(`/search/q=${searchTerm} videos`)
     } else if(location.pathname==='/news'){
       getResults(`/news/q=${searchTerm}`)
     } 
@@ -20,11 +20,14 @@ const Result = () => {
     }
     
     console.log(results)
+    return()=>{
+
+    }
   }, [searchTerm,location.pathname])
   
   
 
-  if(loading){
+  if(Loadingg){
     return <Loading />;
   }
 
@@ -35,8 +38,8 @@ const Result = () => {
       return (<div>
         {results?.map( (result,index)=>{
       return <div key={index} className='p-10 py-5'>
-        <p>{result.title}</p>
-          <a href={result.link} target='_blank' rel='noreferrer' className='hover:text-blue-900' > {result.link} </a>
+        <p>{result?.title}</p>
+          <a href={result?.link} target='_blank' rel='noreferrer' className='hover:text-blue-900' > {result.link} </a>
         <p className='px-1 py-2'>
         {result?.description?.lenght>100? result.description.substring(0,100):result.description}
         </p>
@@ -49,7 +52,7 @@ const Result = () => {
         <div>
           {results?.map((entry,index)=>{
             return (<div key={index} className='p-5 text-center '>
-                  {entry?.links[0]?.href &&  <a href={entry?.links[0]?.href} target='_blank' rel='noreferrer' className='text-blue-500'>
+                  {entry?.links &&  <a href={entry?.links} target='_blank' rel='noreferrer' className='text-blue-500'>
                       <p>{entry?.title}</p>;
                     </a>}
                   { entry?.source?.href && <a href={entry?.source?.href}>
@@ -77,9 +80,19 @@ const Result = () => {
       return (
         <div>
           {results?.map((video,index)=>{
-            return <div key={index} className='p-2'> 
-            
-                <ReactPlayer url={video?.link} controls width="350px" height="200px" />
+            return <div key={index} className=' p-10 py-5'> 
+            <p className='text-teal-900'> {video?.link.includes('youtube') ? video.title:''}  </p>
+            <a href={video?.link.includes('youtube') ? video.link:''} className='text-slate-500 hover:text-blue-600 px-1 py-2' target='_blank' rel='noreferrer'> {video?.link.includes('youtube') ? video.link:''} 👈🏻 Click Here</a>
+            <p className='px-1 py-2 text-yellow-900'>  
+            {video?.link.includes('youtube') ? video.description:''}
+            </p>
+                {/* <ReactPlayer url={video?.link.includes('youtube') ? video.link:''} controls width="350px" height="200px" />*/ }
+                {/* <video autoPlay controls width="400" height="300">
+                  <source src={video?.link.includes('youtube') ? video.link:''} />
+                  <source src={video?.link.includes('video.html') ? video.link:''} />
+                  
+                  Video tag is not supported in this browser.
+          </video> */}
             </div>
           })}
 
